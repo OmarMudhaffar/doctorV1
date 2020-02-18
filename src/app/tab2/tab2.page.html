@@ -1,17 +1,41 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 2
+      الحجوزات
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="notfound" *ngIf="nodata">
+    <div>
+      <img src="assets/nodata.svg" />
+      <p class="ion-text-center" style="margin: 0px;">لا يوجد بيانات</p>
+    </div>
+  </div>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <ion-card *ngFor="let item of items  ">
+    <div class="cardhead">
+      <p>
+        {{item.payload.val()['doctorName']}}
+      </p>
+      <span>
+        <ion-icon name="calendar-outline"></ion-icon>
+        {{item.payload.val()['date']}}
+      </span>
+    </div>
+    <div class="loc">
+      <p class="lead primary">
+        {{item.payload.val()['doctorSpel']}} |
+        {{item.payload.val()['workname']}}
+      </p>
+
+      <ion-icon
+        name="trash-outline"
+        color="danger"
+        style="font-size:17px"
+        (click)="delete(item.key)"
+      ></ion-icon>
+    </div>
+  </ion-card>
 </ion-content>
