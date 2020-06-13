@@ -39,6 +39,19 @@ const routes: Routes = [
       },
 
       {
+        path: "tab5",
+        children: [
+          {
+            path: "",
+            loadChildren: () =>
+              import("../clients/clients.module").then(
+                m => m.ClientsPageModule
+              )
+          }
+        ]
+      },
+
+      {
         path: "tab4",
         children: [
           {
@@ -51,16 +64,24 @@ const routes: Routes = [
         ]
       },
 
+
+
+      {
+        path: "tabs",
+        redirectTo: "tabs/tab1",
+        pathMatch: "full"
+      },
+
       {
         path: "",
-        redirectTo: "home/tabs/tab1",
+        redirectTo: "tabs/tab1",
         pathMatch: "full"
       }
     ]
   },
   {
     path: "",
-    redirectTo: "home/tabs/tab1",
+    redirectTo: "tabs/tab1",
     pathMatch: "full"
   }
 ];
@@ -69,4 +90,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

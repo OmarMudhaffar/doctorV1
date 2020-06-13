@@ -5,6 +5,7 @@ import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { NavController } from "@ionic/angular";
 import { AngularFireAuth } from "@angular/fire/auth";
+import { NavigationExtras, Router } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -17,18 +18,10 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public nav: NavController,
-    public auth: AngularFireAuth
+    public auth: AngularFireAuth,
+    public router: Router
   ) {
     this.initializeApp();
-
-    this.auth.authState.subscribe(user => {
-      if (user != null) {
-        this.nav.navigateRoot("/home/tabs/tab1");
-      }
-      if (user == null) {
-        this.nav.navigateRoot("/login");
-      }
-    });
   }
 
   initializeApp() {

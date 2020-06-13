@@ -7,14 +7,9 @@ const routes: Routes = [
     loadChildren: () =>
       import("./login/login.module").then(m => m.LoginPageModule)
   },
-  {
-    path: "",
-    loadChildren: () =>
-      import("./splash/splash.module").then(m => m.SplashPageModule)
-  },
 
   {
-    path: "home",
+    path: "",
     loadChildren: () => import("./tabs/tabs.module").then(m => m.TabsPageModule)
   },
   {
@@ -23,17 +18,18 @@ const routes: Routes = [
       import("./register/register.module").then(m => m.RegisterPageModule)
   },
   {
-    path: 'view-doctor',
-    loadChildren: () => import('./view-doctor/view-doctor.module').then( m => m.ViewDoctorPageModule)
+    path: "view-doctor",
+    loadChildren: () =>
+      import("./view-doctor/view-doctor.module").then(
+        m => m.ViewDoctorPageModule
+      )
   },
   {
-    path: 'booking',
-    loadChildren: () => import('./booking/booking.module').then( m => m.BookingPageModule)
-  }
-  // {
-  //   path: 'add-doctor',
-  //   loadChildren: () => import('./add-doctor/add-doctor.module').then( m => m.AddDoctorPageModule)
-  // }
+    path: "booking",
+    loadChildren: () =>
+      import("./booking/booking.module").then(m => m.BookingPageModule)
+  },
+
 ];
 @NgModule({
   imports: [
@@ -41,4 +37,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

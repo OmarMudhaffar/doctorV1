@@ -68,3 +68,30 @@ ion-card {
 .notfound img {
   width: 130px;
 }
+
+.status > div {
+    color: #FFF;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 3px;
+}
+
+.status .pen {
+      background: #607D8B;
+}
+
+.status .reject {
+background: #f44336;
+}
+
+.status .accept {
+  background: #4caf50;
+}
+
+
+.loading {
+  height: calc(100vh - 150px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

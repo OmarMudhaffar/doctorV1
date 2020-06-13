@@ -1,7 +1,7 @@
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Component } from "@angular/core";
-import { AlertController } from "@ionic/angular";
+import { AlertController, NavController } from "@ionic/angular";
 import { NavigationExtras, Router } from "@angular/router";
 
 @Component({
@@ -12,35 +12,35 @@ import { NavigationExtras, Router } from "@angular/router";
 export class Tab1Page {
   items: Array<any> = [];
   loading: Boolean = true;
-
-  list: any[] = [
-    {
-      name: "عمر مظفر",
-      img:
-        "https://lh3.googleusercontent.com/proxy/1kZzF-meq08lAhyq21FRzpxsKqFD2cYF9XqG-S0jLD_WwEtPNaot7xqOPbFxooi7mDuk9fpPHYX77ebiluQHTPMul5bG_1HhvmaW-z1Hg7VUKqxphFlWHMVoEIYi6Vokvp3MIy3aAHBLLbwzLJdsx0VX",
-      spel: "عضام"
-    },
-
-    {
-      name: "تبارك محمد",
-      img:
-        "https://images.theconversation.com/files/304957/original/file-20191203-66986-im7o5.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip",
-      spel: "باطنية"
-    }
-  ];
+  searchshow: Boolean = true;
+  myar = [];
+  isLogin: Boolean = false;
+  isnotLogin: Boolean = false;
 
   constructor(
     public alertController: AlertController,
     public auth: AngularFireAuth,
     public db: AngularFireDatabase,
-    public router: Router
+    public router: Router,
+    public nav: NavController
   ) {
+    auth.authState.subscribe(user => {
+      if (user != undefined) {
+        this.isLogin = true;
+        this.isnotLogin = false;
+      } else {
+        this.isnotLogin = true;
+        this.isLogin = false;
+      }
+    });
+
     db.list("users", ref => ref.orderByChild("doctor").equalTo(true))
       .snapshotChanges()
       .subscribe(data => {
         this.loading = false;
 
-        this.items = data;
+        this.items = data.slice().reverse();
+        this.myar = data.slice().reverse();
       });
   }
 
@@ -61,12 +61,57 @@ export class Tab1Page {
           text: "خروج",
           handler: () => {
             this.auth.auth.signOut();
+            this.nav.navigateRoot("/login");
           }
         }
       ]
     });
 
     await alert.present();
+  }
+
+  initializeItems() {
+    this.items = this.myar;
+  }
+
+  selected(vale) {
+    this.initializeItems();
+    const val = vale.target.value;
+
+    if (val == "الجميع") {
+      this.items = this.myar;
+    } else {
+      if (val && val.trim() != "") {
+        this.items = this.items.filter(item => {
+          return (
+            item.payload
+              .val()
+              .spel.toLowerCase()
+              .indexOf(val.toLowerCase()) > -1
+          );
+        });
+      }
+    }
+  }
+
+  getItems(ev: any) {
+    // Reset items back to all of the items
+    this.initializeItems();
+
+    // set val to the value of the searchbar
+    const val = ev.target.value;
+
+    // if the value is an empty string don't filter the items
+    if (val && val.trim() != "") {
+      this.items = this.items.filter(item => {
+        return (
+          item.payload
+            .val()
+            .fullname.toLowerCase()
+            .indexOf(val.toLowerCase()) > -1
+        );
+      });
+    }
   }
 
   viewDoctor(item) {

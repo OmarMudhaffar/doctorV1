@@ -11,6 +11,9 @@ import { AlertController, ToastController } from "@ionic/angular";
 export class Tab2Page {
   items: Array<any> = [];
   nodata: Boolean = false;
+  isDoctor: Boolean = false;
+  notlogin: Boolean = false;
+  loading: Boolean = true;
   constructor(
     public db: AngularFireDatabase,
     public auth: AngularFireAuth,
@@ -19,35 +22,54 @@ export class Tab2Page {
   ) {
     auth.authState.subscribe(user => {
       if (user != undefined) {
-        if (user.email != "admin@admin.com") {
-          db.list("booking", ref =>
-            ref.orderByChild("userEmail").equalTo(auth.auth.currentUser.email)
-          )
-            .snapshotChanges()
-            .subscribe(data => {
-              if (data.length == 0) {
-                this.nodata = true;
-              } else {
-                this.nodata = false;
-              }
+        this.notlogin = false;
+        console.log(user.email);
 
-              this.items = data;
-            });
-        } else {
-          db.list("booking", ref =>
-            ref.orderByChild("doctorEmail").equalTo(user.email)
-          )
-            .snapshotChanges()
-            .subscribe(data => {
-              if (data.length == 0) {
-                this.nodata = true;
-              } else {
-                this.nodata = false;
-              }
+        db.list("users", ref => ref.orderByChild("email").equalTo(user.email))
+          .valueChanges()
+          .subscribe(userinfo => {
+            if (userinfo[0]["doctor"]) {
+              this.isDoctor = true;
+              db.list("booking", ref =>
+                ref.orderByChild("doctorEmail").equalTo(user.email)
+              )
+                .snapshotChanges()
+                .subscribe(data => {
 
-              this.items = data;
-            });
-        }
+
+                  if (data.length == 0) {
+                    this.nodata = true;
+                  } else {
+
+                    this.nodata = false;
+                  }
+
+                  this.loading = false
+
+                  this.items = data;
+                });
+            } else {
+              db.list("booking", ref =>
+                ref.orderByChild("userEmail").equalTo(user.email)
+              )
+                .snapshotChanges()
+                .subscribe(data => {
+                  console.log(data);
+
+                  if (data.length == 0) {
+                    this.nodata = true;
+                    this.loading = false;
+                  } else {
+                    this.loading = false;
+                    this.nodata = false;
+                  }
+
+                  this.items = data;
+                });
+            }
+          });
+      } else {
+        this.notlogin = true;
       }
     });
   }
@@ -59,6 +81,15 @@ export class Tab2Page {
     });
     await toast.present();
   }
+
+  async aprovePres(text) {
+    let toast = await this.toast.create({
+      message: text,
+      duration: 2000
+    });
+    await toast.present();
+  }
+
 
   async delete(key) {
     let alert = await this.alert.create({
@@ -72,7 +103,7 @@ export class Tab2Page {
             this.db
               .list("booking")
               .remove(key)
-              .then(() => {});
+              .then(() => { });
           }
         },
         {
@@ -88,4 +119,34 @@ export class Tab2Page {
 
     await alert.present();
   }
+
+
+  accept(item) {
+    var data = item.payload.val();
+    this.db.list("booking").update(item.key, {
+      status: "accept"
+    }).then(() => {
+      this.db.list("clients").push({
+        doctorEmail: data["doctorEmail"],
+        doctorName: data["doctorName"],
+        userEmail: data["userEmail"],
+        userName: data["userName"],
+        doctorAbout: data["doctorAbout"],
+        date: data["date"],
+        rajita: "لم يتم التعيين"
+      }).then(() => {
+        this.aprovePres("تم الموافقة على الحجز")
+
+      })
+    })
+  }
+
+  reject(key) {
+    this.db.list("booking").update(key, {
+      status: "reject"
+    }).then(() => {
+      this.aprovePres("تم رفظ الحجز")
+    })
+  }
+
 }

@@ -24,34 +24,17 @@
       </div>
 
       <div class="cusinput">
-        <textarea type="text" placeholder="نبذة عن الطبيب" #about></textarea>
+        <textarea type="text" placeholder="السيرة الذاتية" #about></textarea>
       </div>
 
-      <ion-button
-        expand="full"
-        class="ion-margin-bottom"
-        color="danger"
-        (click)="takePhoto()"
-      >
+      <ion-button expand="full" class="ion-margin-bottom" color="danger" (click)="takePhoto()">
         <span *ngIf="!loadingimg">ارفاق صورة</span>
-        <ion-spinner
-          *ngIf="loadingimg"
-          name="crescent"
-          color="white"
-          style="color: #FFF;"
-        ></ion-spinner>
+        <ion-spinner *ngIf="loadingimg" name="crescent" color="white" style="color: #FFF;"></ion-spinner>
       </ion-button>
 
-      <ion-button
-        expand="full"
-        (click)="adddoc(username.value,spel.value,workname.value,about.value)"
-      >
+      <ion-button expand="full" (click)="adddoc(username.value,spel.value,workname.value,about.value)">
         <span *ngIf="!loading">اضافة طبيب</span>
-        <ion-spinner
-          *ngIf="loading"
-          name="crescent"
-          color="white"
-        ></ion-spinner>
+        <ion-spinner *ngIf="loading" name="crescent" color="white"></ion-spinner>
       </ion-button>
     </div>
   </div>

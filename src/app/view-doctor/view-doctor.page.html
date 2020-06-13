@@ -12,7 +12,7 @@
     <p class="lead title ion-text-center">{{info.fullname}}</p>
 
     <ion-list>
-      <ion-item>
+      <ion-item (click)="openlocation(info.lat,info.lng,info.fullname)">
         <ion-icon color="primary" name="map-outline" item-start></ion-icon>
         <p class="lead itemp">{{info.workname}}</p>
       </ion-item>
@@ -34,6 +34,15 @@
           {{info.about}}
         </p>
       </div>
+
+      <ion-item>
+        <ion-label>وقت الحجز</ion-label>
+        <ion-datetime
+          [pickerOptions]="customPickerOptions"
+          displayFormat="HH:mm"
+          [(ngModel)]="myDate"
+        ></ion-datetime>
+      </ion-item>
 
       <button class="book" (click)="book()">
         <span *ngIf="!loading">حجز طبيب</span>

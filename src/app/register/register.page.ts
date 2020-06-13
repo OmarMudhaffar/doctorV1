@@ -112,6 +112,7 @@ export class RegisterPage implements OnInit {
               lat: res.coords.latitude
             });
           });
+          this.nav.navigateRoot("tabs/tab1");
         })
         .catch(err => {
           this.loading = false;

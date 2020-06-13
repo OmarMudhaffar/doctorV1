@@ -44,13 +44,17 @@ export class LoginPage implements OnInit {
     this.route.navigate(["register"]);
   }
 
+  showHome() {
+    this.nav.navigateRoot("tabs/tab1");
+  }
+
   login(email, pass) {
     if (email.length > 4 && pass.length >= 6) {
       this.loading = true;
       this.auth.auth
         .signInWithEmailAndPassword(email, pass)
         .then(res => {
-          this.nav.navigateRoot("tabs");
+          this.nav.navigateRoot("tabs/tab1");
         })
         .catch(err => {
           this.loading = false;

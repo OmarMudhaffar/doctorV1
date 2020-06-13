@@ -97,7 +97,7 @@ export class AddDoctorPage implements OnInit {
                 })
                 .then(() => {
                   this.addedDoc();
-                  this.nav.navigateRoot("/home/tabs/tab1");
+                  this.nav.navigateRoot("/tabs/tab1");
                 })
                 .catch(err => {
                   this.loadingimg = false;

@@ -5,14 +5,48 @@
     </ion-title>
 
     <ion-buttons slot="secondary">
-      <ion-button>
+      <!-- <ion-button (click)="search()" *ngIf="!searchshow">
         <ion-icon color="primary" slot="icon-only" name="search"></ion-icon>
       </ion-button>
 
-      <ion-button (click)="logout()">
+      <ion-button (click)="closesearch()" *ngIf="searchshow">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button> -->
+
+      <ion-button [routerLink]="['/login']" *ngIf="isnotLogin">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="logout()" *ngIf="isLogin">
         <ion-icon name="power-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-header *ngIf="searchshow">
+  <ion-toolbar style="display: flex;">
+    <ion-row>
+      <ion-col size="9">
+        <ion-searchbar
+          (ionInput)="getItems($event)"
+          animated
+          placeholder="اسم الطبيب"
+        ></ion-searchbar>
+      </ion-col>
+      <ion-col>
+        <ion-select
+          value="الجميع"
+          interface="popover"
+          (ionChange)="selected($event)"
+        >
+          <ion-select-option value="الجميع">الجميع </ion-select-option>
+          <ion-select-option value="باطنية">باطنية</ion-select-option>
+          <ion-select-option value="قلبية">قلبية</ion-select-option>
+          <ion-select-option value="عظام">عظام</ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
